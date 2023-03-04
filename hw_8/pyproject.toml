@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "hw-8"
+version = "0.1.0"
+description = ""
+authors = ["Kirienko-Alyona <ladybird.miami@gmail.com>"]
+readme = "README.md"
+packages = [{include = "hw_8"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pymongo = {extras = ["srv", "tls"], version = "^4.3.3"}
+mongoengine = "^0.26.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
