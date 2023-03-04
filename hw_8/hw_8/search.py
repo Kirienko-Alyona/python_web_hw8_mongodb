@@ -1,50 +1,44 @@
 from pymongo import MongoClient
 
-from models import Quote, Author
+from models import Quotes, Authors
 from connect import conn
 
-res = []
+
+def search_name(name: str) -> str:
+    authors = Authors.objects(fullname=name)
+    list_quote = Quotes.objects(author=authors[0].id)
+    first_item = list_quote[0]
+    return list_quote
 
 
-def search_name(data: str) -> str:
-    author = Author.objects(fullname=data)
-    for item in author:
-        author_id = item.id
-        list_quote = Quote.objects(author=author_id)
-        for quote in list_quote:
-            search_quote(quote)
-    return None
-
-
-def search_quote(quote: Quote) -> str:
+def print_quote(quote: Quotes) -> str:
     global res
 
     quote = quote.quote
 
-    if not quote in res:
-        print(quote)
-        res.append(quote)
+    #if not quote in res:
+    print(quote)
+    #res.append(quote)
     return quote
 
 
 def search_tag(data: str) -> list:
-    res = []
     try:
         tags = data.split(",")
     except:
         return "This tag isn't."
-    for tag in tags:
-        set_quote = Quote.objects(tags=tag)
-        for quote in set_quote:
-            search_quote(quote)
-    return None
+    list_quote = Quotes.objects(tags__in=tags)
+
+    return list_quote
 
 
 if __name__ == '__main__':
 
     client = MongoClient(conn)
     db = client.mongo_db
-    search_tag("life,live")
-    # search_tag("life")
-    search_name(("Albert Einstein"))
+    list_quotes = search_tag("life,humor")
+    #list_quotes = search_tag("humor")
+    #list_quotes = search_name(("Albert Einstein"))
+    for quote in list_quotes:
+        print_quote(quote)
     client.close()

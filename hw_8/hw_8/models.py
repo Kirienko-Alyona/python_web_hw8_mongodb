@@ -2,7 +2,7 @@ from mongoengine import Document, CASCADE
 from mongoengine.fields import ReferenceField, ListField, StringField, ObjectId
 
 
-class Author(Document):
+class Authors(Document):
 
     fullname = StringField(required=True)
     born_date = StringField(required=True, max_lenght=30)
@@ -10,8 +10,8 @@ class Author(Document):
     description = StringField(required=True)
 
 
-class Quote(Document):
+class Quotes(Document):
 
     tags = ListField(max_length=10, required=True)
-    author = ReferenceField(Author, reverse_delete_rule=CASCADE)
+    author = ReferenceField(Authors, reverse_delete_rule=CASCADE)
     quote = StringField(max_length=250, required=True)
