@@ -1,7 +1,7 @@
 import json
 from pymongo import MongoClient
 
-from models import Authors, Quotes
+from models import Author, Quote
 from connect import conn
 
 filenames = ["authors", "quotes"]
@@ -9,7 +9,7 @@ filenames = ["authors", "quotes"]
 
 def create_collection():
     all_id = []
-    all_autors_fullname = []
+    all_author_fullname = []
     for filename in filenames:
         db[filename]
         path = r"./hw_8/hw_8/" + filename + ".json"
@@ -19,17 +19,17 @@ def create_collection():
             myList = json.loads(text)
             for jsonObj in myList:
                 if filename == "authors":
-                    author = Authors(fullname=jsonObj['fullname'], born_date=jsonObj["born_date"],
+                    author = Author(fullname=jsonObj['fullname'], born_date=jsonObj["born_date"],
                                      born_location=jsonObj["born_location"], description=jsonObj["description"])
                     author.save()
                     author_id = author.id
                     author_fullname = author.fullname
                     all_id.append(author_id)
-                    all_autors_fullname.append(author_fullname)
+                    all_author_fullname.append(author_fullname)
                 elif filename == "quotes":
-                    for one_id, author_fullname in zip(all_id, all_autors_fullname):
+                    for one_id, author_fullname in zip(all_id, all_author_fullname):
                         if author_fullname == jsonObj["author"]:
-                            quote = Quotes(
+                            quote = Quote(
                                 tags=jsonObj["tags"], author=one_id, quote=jsonObj["quote"])
                             quote.save()
     return
