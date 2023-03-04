@@ -1,20 +1,21 @@
 from termcolor import colored
-# def exit_func(*_) -> str:
-#     """The function close bot."""
-#     return exit(colored("Bye! I'm gonna miss you ;)\n", "blue", attrs=["bold"]))
+
+from search import search_name, search_tag, print_quote
+
 FUNCTIONS = {
-    "name:": get_name(),
-    "tag": get_tag(),
-    "tags:": get_tags()
+    "name": search_name,
+    "tag": search_tag,
+    "tags": search_tag
 }
 
+
 def handler(input_string: str) -> list:
-  
+
     command = ""
     data = ""
-    input_string = input_string.strip().lower() + " "
+    input_string = input_string.strip()
     for key in FUNCTIONS:
-        if input_string.startswith(key + " "):
+        if input_string.startswith(key):
             command = key
             data = input_string[len(command):].strip()
             break
@@ -23,26 +24,23 @@ def handler(input_string: str) -> list:
         print(colored("I dont know this command", "blue"))
 
     if data:
-        args = data.strip().split(" ")
-        return FUNCTIONS[command](args)
+        data = data.split(":")
+        return FUNCTIONS[command](data[1].strip())
 
     return FUNCTIONS[command]()
 
 
-
 def main():
     while True:
-        input_string = input("\nInput words, please: ")
+        input_string = input(colored("\nInput words, please: ", "blue"))
 
         if input_string.lower() == "exit":
-            #exit_func()
             print(colored("Good bye :)", "blue"))
             exit()
-        print(handler(input_string))
-
-
-
-
+        list_quote = handler(input_string)
+        for quote in list_quote:
+            quote = print_quote(quote)
+            print(quote)
 
 
 if __name__ == '__main__':
