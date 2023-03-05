@@ -25,8 +25,7 @@ def handler(input_string: str) -> list:
             data = data[1].strip().split(",")
             break
     if data[0] !='':
-        if len(data) != 0:
-            return FUNCTIONS[command](data)
+        return FUNCTIONS[command](data)
     else:
         raise ValueError
 
@@ -44,7 +43,7 @@ def main():
         if not (isinstance(list_quote, str)):
             for quote in list_quote:
                 quote = return_quote(quote)
-                print(quote)
+                print(colored(quote, "magenta"))
         
         else:       
             print(list_quote)

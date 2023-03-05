@@ -17,7 +17,7 @@ def search_name(name: list) -> str:
     if (name[0].find(" ") == -1) or (name[0].islower() == True):
         raise AttributeError(colored(
             "Wrong format. Please enter: '{command:}{author's name separated by a space and capitalized}'", "red"))
-    authors = Authors.objects(fullname=name)
+    authors = Authors.objects(fullname=name[0])
     list_quote = Quotes.objects(author=authors[0].id)
     if len(list_quote) != 0:
         return list_quote
