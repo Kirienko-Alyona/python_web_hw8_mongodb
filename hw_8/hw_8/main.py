@@ -1,5 +1,3 @@
-import re
-import chardet
 from termcolor import colored
 from decor import input_error
 
