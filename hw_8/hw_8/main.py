@@ -24,8 +24,7 @@ def handler(input_string: str) -> list:
             data = input_string[len(command):].strip().split(":")
             data = data[1].strip().split(",")
             break
-    if data not in (['', ''], ['']):
-        
+    if data[0] !='':
         if len(data) != 0:
             return FUNCTIONS[command](data)
     else:
