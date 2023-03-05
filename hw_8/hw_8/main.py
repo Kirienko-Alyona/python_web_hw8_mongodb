@@ -1,14 +1,16 @@
 from termcolor import colored
+from decor import input_error
 
-from search import search_name, search_tag, print_quote
+from search import search_name, search_tag, return_quote
 
 FUNCTIONS = {
     "name": search_name,
-    "tag": search_tag,
-    "tags": search_tag
+    "tags": search_tag,
+    "tag": search_tag
 }
 
 
+@input_error
 def handler(input_string: str) -> list:
 
     command = ""
@@ -17,17 +19,12 @@ def handler(input_string: str) -> list:
     for key in FUNCTIONS:
         if input_string.startswith(key):
             command = key
-            data = input_string[len(command):].strip()
+            data = input_string[len(command):].strip().split(":")
             break
-
-    if not command:
-        print(colored("I dont know this command", "blue"))
-
-    if data:
-        data = data.split(":")
+    if data not in (['', ''], ['']):
         return FUNCTIONS[command](data[1].strip())
-
-    return FUNCTIONS[command]()
+    else:
+        raise ValueError
 
 
 def main():
@@ -37,10 +34,7 @@ def main():
         if input_string.lower() == "exit":
             print(colored("Good bye :)", "blue"))
             exit()
-        list_quote = handler(input_string)
-        for quote in list_quote:
-            quote = print_quote(quote)
-            print(quote)
+        print(handler(input_string))
 
 
 if __name__ == '__main__':
