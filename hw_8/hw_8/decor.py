@@ -7,19 +7,19 @@ def input_error(func) -> str:
         try:
             return func(*args, **kwargs)
 
-        except KeyError:
-            return colored("Wrong format. Please enter: '{command:}{name author}' or {command:}{tag,tag}'", "red")
+        except KeyError as exception:
+            return exception.args[0]
 
         except ValueError:
             return colored("You forgot to enter the author name or tags.", "red")
 
         except IndexError:
-            return colored("Can't find information about this author or the data is incorrect.", "red")
+            return colored("Can't find quote of this author or the tag.", "red")
 
         except TypeError:
             return colored("Unknown command or parameters, please try again.", "red")
 
-        except AttributeError:
-            return colored("1", "red")
+        except AttributeError as exception:
+            return exception.args[0]
 
     return inner

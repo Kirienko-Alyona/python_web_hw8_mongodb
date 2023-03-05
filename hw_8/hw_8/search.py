@@ -7,29 +7,32 @@ from connect import conn
 
 
 @input_error
-def return_quote(list_quote: Quotes) -> str:
-    res_quotes = []
-    for quote in list_quote:
-        quote = quote.quote
-        res_quotes.append(quote)
-    return res_quotes
+def return_quote(quote: Quotes) -> str:
+    quote = quote.quote
+    return quote
 
 
 @input_error
 def search_name(name: str) -> str:
+    try:
+        name.find(" ")
+    except AttributeError:
+        return colored("Wrong format. Please enter: '{command:}{author's name separated by a space and capitalized}'", "red")
     authors = Authors.objects(fullname=name)
     list_quote = Quotes.objects(author=authors[0].id)
     return return_quote(list_quote)
 
 
 @input_error
-def search_tag(data: str) -> list:
-    try:
-        tags = data.split(",")
-    except ValueError:
-        return colored("This tag isn't.", "red")
-    list_quote = Quotes.objects(tags__in=tags)
-    return return_quote(list_quote)
+def search_tag(data: list) -> list:
+    for item in data:
+        if (item.islower() == False) or (item.split(" ") == True):
+            raise KeyError(colored("Wrong format. Please enter: '{command:}{tag,tag}' without spaces and in lower case.", "red"))
+    list_quote = Quotes.objects(tags__in=data)
+    if len(list_quote) != 0:
+        return list_quote
+    else:
+        raise IndexError
 
 
 if __name__ == '__main__':

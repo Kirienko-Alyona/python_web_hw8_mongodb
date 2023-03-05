@@ -1,3 +1,5 @@
+import re
+import chardet
 from termcolor import colored
 from decor import input_error
 
@@ -20,9 +22,12 @@ def handler(input_string: str) -> list:
         if input_string.startswith(key):
             command = key
             data = input_string[len(command):].strip().split(":")
+            data = data[1].strip().split(",")
             break
     if data not in (['', ''], ['']):
-        return FUNCTIONS[command](data[1].strip())
+        
+        if len(data) != 0:
+            return FUNCTIONS[command](data)
     else:
         raise ValueError
 
@@ -34,8 +39,16 @@ def main():
         if input_string.lower() == "exit":
             print(colored("Good bye :)", "blue"))
             exit()
-        print(handler(input_string))
-
+            
+        list_quote = handler(input_string)
+        
+        if not (isinstance(list_quote, str)):
+            for quote in list_quote:
+                quote = return_quote(quote)
+                print(quote)
+        
+        else:       
+            print(list_quote)
 
 if __name__ == '__main__':
     main()
