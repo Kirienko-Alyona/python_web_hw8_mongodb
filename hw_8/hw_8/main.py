@@ -40,7 +40,7 @@ def main():
             
         list_quote = handler(input_string)
         
-        if not (isinstance(list_quote, str)):
+        if not (isinstance(list_quote, str)): #if list_quote is str
             for quote in list_quote:
                 quote = return_quote(quote)
                 print(colored(quote, "magenta"))
