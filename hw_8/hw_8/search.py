@@ -28,10 +28,12 @@ def search_name(fullname: list) -> list:
 def search_tag(data: list) -> list:
     list_quote = []
     for item in data:
-        if item.split(" ") == True:
-            raise KeyError(colored("Wrong format. Please enter: '{command:}{tag,tag}' without spaces.", "red"))
-        regexpr = re.compile('^'+ item.islower())
+        if (item.find(" ") != -1) or (item.islower() == False):
+            raise KeyError(colored("Wrong format. Please enter: '{command:}{tag,tag}' without spaces in lower case.", "red"))
+        regexpr = re.compile('^'+ item)
         quote = Quotes.objects(tags__iregex=regexpr).first() #iregex – поле рядка збігається з регулярним виразом (незалежно від регістру)
+        if quote == None:
+            raise AttributeError(colored("Can't find quote of this author or the tag.", "red"))
         list_quote.append(quote)
     return list_quote
 
