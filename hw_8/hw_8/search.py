@@ -1,15 +1,23 @@
 import re
 from pymongo import MongoClient
 from termcolor import colored
+import redis
+from redis_lru import RedisLRU
 
 from decor import input_error
 from models import Quotes, Authors
 from connect import conn
 
 
+client_redis = redis.StrictRedis(host="localhost", port=6379, password=None)
+cache = RedisLRU(client_redis)
+
+@cache
 @input_error
 def return_quote(quote: Quotes) -> str:
     quote = quote.quote
+    client_redis.set("quote", quote)
+    client_redis.get("quote")
     return quote
 
 
@@ -23,7 +31,7 @@ def search_name(fullname: list) -> list:
         return colored("Can't find quote of this author or the tag.", "red")
     return list_quote
         
-
+        
 @input_error
 def search_tag(data: list) -> list:
     list_quote = []
