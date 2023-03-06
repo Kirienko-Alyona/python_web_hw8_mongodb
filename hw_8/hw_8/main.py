@@ -10,6 +10,7 @@ FUNCTIONS = {
 }
 
 
+@input_error
 def handler(input_string: str) -> list:
 
     command = ""
