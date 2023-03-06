@@ -1,3 +1,4 @@
+import re
 from pymongo import MongoClient
 from termcolor import colored
 
@@ -13,29 +14,26 @@ def return_quote(quote: Quotes) -> str:
 
 
 @input_error
-def search_name(name: list) -> str:
-    if (name[0].find(" ") == -1) or (name[0].islower() == True):
-        raise AttributeError(colored(
-            "Wrong format. Please enter: '{command:}{author's name separated by a space and capitalized}'", "red"))
-    author = Authors.objects(fullname=name[0]).first()
-    list_quote = Quotes.objects(author=author.id)
-    if len(list_quote) != 0:
-        return list_quote
-    else:
-        raise IndexError
-
+def search_name(fullname: list) -> list: 
+    name = (fullname[0].split(" "))[0]
+    try:
+        author = Authors.objects(fullname__istartswith=name).first() #istartswith -поле рядка починається зі значення (незалежно від регістру)
+        list_quote = Quotes.objects(author=author.id)
+    except AttributeError:
+        return colored("Can't find quote of this author or the tag.", "red")
+    return list_quote
+        
 
 @input_error
 def search_tag(data: list) -> list:
+    list_quote = []
     for item in data:
-        if (item.islower() == False) or (item.split(" ") == True):
-            raise KeyError(colored(
-                "Wrong format. Please enter: '{command:}{tag,tag}' without spaces and in lower case.", "red"))
-    list_quote = Quotes.objects(tags__in=data)
-    if len(list_quote) != 0:
-        return list_quote
-    else:
-        raise IndexError
+        if item.split(" ") == True:
+            raise KeyError(colored("Wrong format. Please enter: '{command:}{tag,tag}' without spaces.", "red"))
+        regexpr = re.compile('^'+ item.islower())
+        quote = Quotes.objects(tags__iregex=regexpr).first() #iregex – поле рядка збігається з регулярним виразом (незалежно від регістру)
+        list_quote.append(quote)
+    return list_quote
 
 
 if __name__ == '__main__':

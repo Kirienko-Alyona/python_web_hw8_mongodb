@@ -10,7 +10,7 @@ FUNCTIONS = {
 }
 
 
-@input_error
+#@input_error
 def handler(input_string: str) -> list:
 
     command = ""
@@ -23,7 +23,7 @@ def handler(input_string: str) -> list:
             data = data[1].strip().split(",")
             break
     if data[0] !='':
-        return FUNCTIONS[command](data)
+        return FUNCTIONS[command](data[0])
     else:
         raise ValueError
 
@@ -38,11 +38,12 @@ def main():
             
         list_quote = handler(input_string)
         
-        if not (isinstance(list_quote, str)): #if list_quote is str
+        if len(list_quote) == 0:
+            raise IndexError
+        elif not (isinstance(list_quote, str)): #if list_quote is str
             for quote in list_quote:
                 quote = return_quote(quote)
-                print(colored(quote, "magenta"))
-        
+                print(colored(quote, "magenta")) 
         else:       
             print(list_quote)
 
