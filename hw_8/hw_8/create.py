@@ -10,7 +10,7 @@ filenames = ["authors", "quotes"]
 def create_collection():
     for filename in filenames:
         db[filename]
-        path = r"./hw_8/hw_8/" + filename + ".json"
+        path = r"./hw_8/hw_8/json_files" + filename + ".json"
 
         with open(path, encoding="utf-8") as f:
             text = f.read()
